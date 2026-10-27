@@ -42,7 +42,7 @@ Priority sources: DOC-01 Core Gameplay GDD (https\://docs.google.com/document/d/
 
 *Figure 1 — End-to-end system architectur*e
 
-![Sơ đồ gốc image1](assets/DOC-04_TDD_image1.png)
+![Sơ đồ gốc image1](../assets/images/DOC-04_TDD_image1.png)
 
 # 
 
@@ -60,7 +60,7 @@ Strict boundary: the external browser-admin does NOT call Roblox client RemoteEv
 
 *Figure 3 — Rojo, Git, VS Code and Team Create workflo*w
 
-![Sơ đồ gốc image2](assets/DOC-04_TDD_image2.png)
+![Sơ đồ gốc image2](../assets/images/DOC-04_TDD_image2.png)
 
 # 
 
@@ -78,7 +78,7 @@ Team Create working convention: (1) one shared Roblox experience, each developer
 
 # Figure — Rojo Project Mapping
 
-![Sơ đồ gốc image3](assets/DOC-04_TDD_image3.png)
+![Sơ đồ gốc image3](../assets/images/DOC-04_TDD_image3.png)
 
 # 
 
@@ -125,7 +125,7 @@ Proposed Rojo mapping: src/shared → ReplicatedStorage/Shared; src/server → S
 
 # Figure — Admin Control Plane
 
-![Sơ đồ gốc image4](assets/DOC-04_TDD_image4.png)
+![Sơ đồ gốc image4](../assets/images/DOC-04_TDD_image4.png)
 
 # 
 
@@ -135,7 +135,7 @@ Proposed Admin UI pages: Login & Access; Overview/active version; Weapons; Enemi
 
 Roles: Owner/Admin can publish production version; Designer can edit draft and request review; QA can test/compare without production publish; Viewer read-only. Use individual accounts, MFA, server-side RBAC, audit actor/time/IP/version/change reason; avoid shared password and long-lived frontend API keys.
 
-Backend recommendation: Next.js/React Admin frontend; TypeScript API (NestJS or Fastify), PostgreSQL for versioned config, Redis or CDN cache for approved snapshots. This is a proposed implementation stack, not pre-existing infrastructure. A simpler managed backend is acceptable if it meets authentication, auditing, validation, public read-only game delivery and rollback.
+Approved stack (FS-01): Next.js + TypeScript Admin frontend; NestJS + TypeScript Admin API, Prisma ORM, PostgreSQL for versioned config, Redis or CDN cache for approved snapshots. This is a proposed implementation stack, not pre-existing infrastructure. A simpler managed backend is acceptable if it meets authentication, auditing, validation, public read-only game delivery and rollback.
 
 ## CONFIG SCHEMA — example JSON (illustrative; omitted branches require full schema definitions)
 
@@ -187,7 +187,7 @@ Hard validation: no negative HP/cost/cooldown, finite numbers only, supported en
 
 *Figure 2 — Admin configuration publishing and rollbac*k
 
-![Sơ đồ gốc image5](assets/DOC-04_TDD_image5.png)
+![Sơ đồ gốc image5](../assets/images/DOC-04_TDD_image5.png)
 
 # 
 
@@ -358,7 +358,7 @@ Exception: emergency feature-disabling flags require separate, explicitly approv
 
 # Figure — Remote Security
 
-![Sơ đồ gốc image6](assets/DOC-04_TDD_image6.png)
+![Sơ đồ gốc image6](../assets/images/DOC-04_TDD_image6.png)
 
 # 
 
@@ -393,7 +393,7 @@ Never trust client-reported damage, XP, kill counts, currency amounts, rarity ro
 
 # Figure — Run State Machine
 
-![Sơ đồ gốc image7](assets/DOC-04_TDD_image7.png)
+![Sơ đồ gốc image7](../assets/images/DOC-04_TDD_image7.png)
 
 # 
 
@@ -409,7 +409,7 @@ Mastery state: SecondaryNotOwned → SecondaryEquipped(Level1, Mastery0) → Col
 
 # Figure — Data Persistence
 
-![Sơ đồ gốc image8](assets/DOC-04_TDD_image8.png)
+![Sơ đồ gốc image8](../assets/images/DOC-04_TDD_image8.png)
 
 # 
 
@@ -425,7 +425,7 @@ Persistence boundary: use DataStore for player meta/owned items, not for per-hit
 
 # Figure — Service Dependencies
 
-![Sơ đồ gốc image9](assets/DOC-04_TDD_image9.png)
+![Sơ đồ gốc image9](../assets/images/DOC-04_TDD_image9.png)
 
 # 
 
@@ -441,7 +441,7 @@ Implementation order: (1) Repo/Rojo integration and Team Create boundaries; (2) 
 
 # Figure — QA RELEASE
 
-![Sơ đồ gốc image10](assets/DOC-04_TDD_image10.png)
+![Sơ đồ gốc image10](../assets/images/DOC-04_TDD_image10.png)
 
 # 
 
@@ -620,7 +620,7 @@ E. To integrate to shared Team Create, coordinate one integration owner/time win
 
 .
 
-![Sơ đồ gốc image11](assets/DOC-04_TDD_image11.png)
+![Sơ đồ gốc image11](../assets/images/DOC-04_TDD_image11.png)
 
 APPENDIX BL-V2 — IMPLEMENTATION HANDOFF / 27 OCT 2026  
 STATUS: PROPOSED for implementation review; preserves existing DOC-04 Admin Web \-\> Admin API \-\> PostgreSQL/versioned Config \-\> read-only Config API \-\> Roblox Server architecture, Rojo/VS Code/Git and Studio Team Create. This appendix does not supersede APPROVED GDD values.  
@@ -735,3 +735,203 @@ flowchart TD
 ```
 
 > Các sơ đồ Mermaid là biểu diễn kỹ thuật bổ sung theo BL-V2. Hình PNG ở các phần trước là hình gốc trích từ Google Docs.
+
+## APPENDIX BL-V2 — LOBBY SYSTEM ARCHITECTURE (CORRECTION)
+
+> **Status:** Proposed architecture mapping grounded in DOC-01 GDD / DOC-02 SYS-17 and SYS-18. Prices, caps, persistence mechanisms and purchase details still marked TBD in source design must not be treated as finalized.
+
+### Lobby system scope
+
+The Lobby is a first-class gameplay domain, not just a transition state. It owns player preparation, persistent progression, content unlock, service access and Run initialization. Visual Lobby environments are Studio/Designer-owned, while authoritative game rules and profile mutations are server-owned.
+
+- **Lobby Loadout:** Select an unlocked Primary for the next Run. Configure the targeting preference for Secondary (Nearest, Highest HP, Lowest HP, Random). Secondary acquisition remains an **in-Run** action, not an automatic second equipped weapon at Run initialization.
+- **Permanent Upgrades:** Primary, Secondary, Armor and Pet upgrades use the persistent economy and require server validation of cost, cap and ownership.
+- **Tome Unlocks and Slots:** Unlock eligible Tomes and prepare availability for the in-Run card pool. Two slots default; slots three/four can unlock by Coin **or** Robux (user-confirmed rule; prices TBD). Slot unlocking is a persistent entitlement, not an instant free Tome grant during the Run.
+- **Shops and Forge:** Material/Coin item exchange and crafting/upgrades, depending on approved content and prices. Gacha/Crates use the premium economy and require approved rarity odds.
+- **Daily Systems:** Daily check-in and daily quest progress/reward claim with server-side idempotency. The four-daily-quest / 20-Diamond proposal from GDD remains subject to implementation and economy validation.
+- **Leaderboard / Hall of Fame:** Read player records/results from dedicated leaderboard projections where applicable; do not trust client-supplied kill counts or survival times.
+- **Dungeon / Run Entry:** Validate player readiness and selected loadout, freeze an immutable `RunConfig` and `RunLoadoutSnapshot`, then transition to RunInit. Only approved and unlocked items are copied to the snapshot.
+
+### Lobby System Architecture — complete flow
+
+```mermaid
+flowchart TB
+  subgraph Client[Roblox Client]
+    LUI[Lobby UI / Equipment / Shop / Quest]
+    LFX[Lobby Visuals / NPC Interactions]
+    RUI[Run HUD / Combat VFX]
+  end
+
+  subgraph Lobby[Server - Lobby Domain]
+    LGateway[Lobby Remote Validation]
+    Profile[Profile Service]
+    Loadout[Loadout Service]
+    Upgrade[Permanent Upgrade Service]
+    TomeUnlock[Tome Unlock / Slot Entitlements]
+    Shop[Shop / Forge / Gacha]
+    Daily[Daily Quest / Check-in]
+    Board[Leaderboard Service]
+    Ready[Dungeon / Run Start Validation]
+  end
+
+  subgraph Runtime[Server - Run Domain]
+    RunState[Run State Machine]
+    Clock[Survival Clock]
+    Combat[Combat / Enemy / Boss]
+    XP[XP / Card / Secondary Mastery]
+    RunGold[In-run Gold Ledger]
+    Rewards[Result / Meta Reward Commit]
+  end
+
+  subgraph Storage[Server-Controlled Storage]
+    DataStore[(Roblox DataStore / Profile)]
+    Ordered[(Leaderboard Projection)]
+    Config[Validated Run Config Snapshot]
+  end
+
+  LUI --> LGateway
+  LFX --> LUI
+  LGateway --> Profile
+  LGateway --> Loadout
+  LGateway --> Upgrade
+  LGateway --> TomeUnlock
+  LGateway --> Shop
+  LGateway --> Daily
+  LGateway --> Board
+  LGateway --> Ready
+  Profile <--> DataStore
+  Upgrade --> Profile
+  TomeUnlock --> Profile
+  Shop --> Profile
+  Daily --> Profile
+  Board --> Ordered
+  Loadout --> Ready
+  Profile --> Ready
+  Config --> Ready
+  Ready -->|Validate + snapshot| RunState
+  RunState --> Clock
+  RunState --> Combat
+  RunState --> XP
+  RunState --> RunGold
+  Combat --> Rewards
+  RunState --> Rewards
+  Rewards -->|Idempotent meta commit| Profile
+  Rewards -->|Result| LUI
+  RunState --> RUI
+```
+
+### Lobby to Run to Lobby — lifecycle and authority
+
+```mermaid
+stateDiagram-v2
+  [*] --> LobbyLoading
+  LobbyLoading --> LobbyReady: Load profile and validate entitlements
+  LobbyReady --> CustomizeLoadout: Select Primary / Secondary targeting
+  CustomizeLoadout --> LobbyReady: Save valid preferences
+  LobbyReady --> MetaUpgrade: Upgrade / Shop / Forge / Tome / Daily
+  MetaUpgrade --> LobbyReady: Validate and persist
+  LobbyReady --> RunInit: Enter Dungeon / Start Run
+  RunInit --> Phase1: Freeze RunConfig + RunLoadout
+  Phase1 --> Phase1Boss: Survival elapsed = 360s
+  Phase1Boss --> Portal1: Boss cleared + reward
+  Portal1 --> Phase2: Continue
+  Portal1 --> RunResult: Return Lobby
+  Phase2 --> Phase2Boss: Survival elapsed = 720s
+  Phase2Boss --> Portal2: Boss cleared + reward
+  Portal2 --> MapBoss: Continue
+  Portal2 --> RunResult: Return Lobby if allowed
+  MapBoss --> RunResult: Victory
+  Phase1 --> RunResult: Defeat / Exit
+  Phase2 --> RunResult: Defeat / Exit
+  MapBoss --> RunResult: Defeat / Exit
+  RunResult --> LobbyLoading: Commit eligible meta rewards once
+```
+
+### Data boundary: permanent versus per-Run
+
+| Domain | Persistent / Lobby | Temporary / Run |
+| --- | --- | --- |
+| Weapons | Ownership, Primary selection, permanent levels; Secondary baseline upgrades and targeting preference | One Secondary acquired through eligible in-Run card, Mastery 1–99, Evolution |
+| Tomes | Unlocked Tome pool and slot entitlement (2 / 3 / 4) | Tome acquisition, Tome level up to 30, temporary modifiers |
+| Currencies | Coin, Diamond, permanent unlocks and receipt status | Gold used in the current Run only |
+| Armor / Pets | Owned/equipped and permanent progression | Derived run-effective stats and temporary buffs |
+| Run status | Last completed results / eligible committed rewards | Phase state, temporary XP and build, boss progress |
+
+### Proposed Lobby integration acceptance tests
+
+| ID | Test | Expected outcome |
+| --- | --- | --- |
+| LOB-01 | Change Primary at Lobby then start Run | Next Run uses selected owned Primary; no mid-Run Primary swap |
+| LOB-02 | Upgrade Primary / Secondary / Armor / Pet | Currency charged once; upgrade persists after rejoin |
+| LOB-03 | Configure Secondary targeting at Lobby | Run uses valid targeting preference; Secondary is still acquired in-Run |
+| LOB-04 | Unlock slot 3/4 using Coin versus Robux | Same functional entitlement; no double purchase or advantage from payment channel |
+| LOB-05 | Unlock Tome while not in Run | Eligible Tome added to future card pool; no free in-Run grant |
+| LOB-06 | Attempt unauthorized shop/upgrade purchase | Server rejects forged price, ownership, insufficient currency or replayed receipt |
+| LOB-07 | Claim daily rewards twice | Only one grant per eligible claim; state saved |
+| LOB-08 | Start Run while config updates | Run retains frozen config and validated loadout to Result |
+| LOB-09 | Return to Lobby on victory/defeat/exit | Only eligible rewards committed once; temporary Gold/XP and in-Run Tome build reset |
+
+**Source/approval note:** GDD/GSD already define the Lobby and major functions; module decomposition and state/data contracts here are proposed implementation details. Specific shop prices, Forge recipes, Gacha odds, quest reset, leaderboard scoring and some exit reward conditions remain TBD.
+
+
+## APPENDIX FS-01 — MULTI-REPOSITORY & FULLSTACK IMPLEMENTATION (27 OCT 2026)
+
+**Decision: APPROVED architecture; runtime implementation: STARTER / NOT VERIFIED.** This appendix supersedes previous all-in-one-monorepo paths and optional frontend/backend technology choices. Preserve approved gameplay rules; detailed costs, values and unexecuted tests retain TBD / NOT TESTED.
+
+### Repository ownership
+
+| Repo | Ownership | Deployment |
+|---|---|---|
+| `hungnq18/document-roblox` | DOC-01 GDD, DOC-02 GSD, DOC-03 Balance, DOC-04 TDD, diagrams, API specs | None |
+| `beat-the-horde-roblox` | Luau + Rojo, gameplay/Lobby/Run, ProfileService and DataStore | Roblox Studio / experience publishing |
+| `beat-the-horde-admin` | Next.js Web, NestJS API, Prisma migrations, PostgreSQL, admin auth/config/publishing | Web and API independently deployable |
+
+### Stack and ownership
+
+- **Roblox Server authoritative:** combat, XP, Secondary Mastery, lobby purchase validation, Run rewards and owned progression. Player Profile resides in Roblox DataStore. Temporary Gold, HP, XP, Mastery and buffs are in Run memory.
+- **Next.js:** admin UI only; no direct privileged DB access from browser. **NestJS:** Auth/RBAC, config drafts and validation, publish, audit, read-only published config endpoint. **Prisma + PostgreSQL:** admin users/roles, draft versions, immutable releases and audit records.
+- Roblox ConfigService calls NestJS published-config endpoint via **server-side HTTPS HttpService**, validates payload against a Luau-compatible versioned contract, caches known-good config and freezes configuration at Run start. Admin draft changes never affect active Runs. Never call backend per combat hit.
+- Three Git repos do **not** imply microservices. Admin API starts as **NestJS modular monolith**; later extract analytics and other services only if deployment/scaling requirements justify it. Do not call the current architecture full microservices.
+
+### Cross-repository architecture
+
+```mermaid
+flowchart TB
+  Docs[document-roblox: Specs and Contracts]
+  subgraph Admin[beat-the-horde-admin]
+    Web[Next.js Admin Web] -->|Authenticated HTTPS| API[NestJS Admin API]
+    API --> ORM[Prisma]
+    ORM --> PG[(PostgreSQL)]
+  end
+  subgraph Roblox[beat-the-horde-roblox]
+    Client[Roblox Client] <-->|Validated Remotes| Server[Luau Game Server]
+    Server --> Lobby[Lobby and Meta Services]
+    Server --> Run[Run and Combat Services]
+  end
+  Lobby --> DS[(Roblox DataStore)]
+  Server -->|HTTPS GET published config| API
+  Docs -.-> Admin
+  Docs -.-> Roblox
+```
+
+### Publishing lifecycle
+
+1. Next.js Admin UI sends authenticated draft update to NestJS.
+2. NestJS validates schema, constraints and roles; persists draft to PostgreSQL using Prisma.
+3. Authorized publish creates immutable release/version and audit record; unpublished draft is not returned by public config API.
+4. Roblox server fetches published config, validates schema/version and caches safe fallback.
+5. **New Run** takes immutable config snapshot. **Current Run** retains its prior snapshot.
+
+### Contract governance
+
+`contracts/openapi.yaml` and `contracts/config.schema.json` in this repo specify expected wire format. The implementation contract within the Admin repo must be validated against these documents in CI; Roblox consumer must reject unsupported schema versions. These files are **design contracts**, not proof of deployed API behavior. Update DOC-04/contract version with changes to API before releasing an incompatible implementation.
+
+### Security and failure behavior
+
+Admin write routes require identity, RBAC, validation, audit and rate limits. Do not ship shared API keys to Roblox client or Next.js browser code. Roblox cannot access a developer's localhost from published cloud servers; use externally reachable HTTPS staging API. In-game progress and rewards must be idempotent and must not fail because analytics is unavailable. Profile persistence remains server-side Roblox DataStore.
+
+### Verification (currently NOT TESTED)
+
+- FS-01 auth/RBAC, FS-02 schema validation and gameplay invariants, FS-03 unpublished draft isolation, FS-04 versioned release/audit, FS-05 active-run snapshot stability, FS-06 known-good offline fallback, FS-07 client security, FS-08 DataStore single source of truth, FS-09 PostgreSQL migration, FS-10 staging HTTPS config fetch.
+
+For editable system, Lobby and Admin diagrams, see `../architecture/`.

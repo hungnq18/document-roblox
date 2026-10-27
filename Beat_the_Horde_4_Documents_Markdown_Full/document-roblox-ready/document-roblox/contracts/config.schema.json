@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/beat-the-horde/config.schema.json",
+  "title": "Beat the Horde Published Config (partial contract / PROPOSED)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "configVersion",
+    "environment",
+    "payload"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "configVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "development",
+        "staging",
+        "production"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "description": "Module-specific config fields still require gameplay-approved schema definitions",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

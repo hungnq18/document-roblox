@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Beat the Horde Config API — Proposed Contract
+  version: 0.1.0
+  description: Draft design contract, not verification of production endpoints. Admin write operations require authenticated RBAC.
+servers:
+  - url: https://api.example.com
+paths:
+  /api/v1/game-config/solo:
+    get:
+      summary: Read the published configuration for Roblox servers
+      parameters:
+        - in: query
+          name: channel
+          schema:
+            type: string
+            enum: [development, staging, production]
+            default: production
+      responses:
+        '200':
+          description: Published config envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishedConfig'
+        '503':
+          description: Published config unavailable
+  /admin/config/drafts:
+    get:
+      security: [{ adminBearer: [] }]
+      summary: List config drafts
+      responses:
+        '200': {description: Draft list}
+    post:
+      security: [{ adminBearer: [] }]
+      summary: Create a draft
+      responses:
+        '201': {description: Created}
+  /admin/config/drafts/{id}:
+    patch:
+      security: [{ adminBearer: [] }]
+      summary: Modify draft
+      parameters:
+        - $ref: '#/components/parameters/DraftId'
+      responses:
+        '200': {description: Updated}
+  /admin/config/drafts/{id}/validate:
+    post:
+      security: [{ adminBearer: [] }]
+      summary: Validate draft against approved rules
+      parameters:
+        - $ref: '#/components/parameters/DraftId'
+      responses:
+        '200': {description: Validation report}
+  /admin/config/drafts/{id}/publish:
+    post:
+      security: [{ adminBearer: [] }]
+      summary: Publish immutable config release
+      parameters:
+        - $ref: '#/components/parameters/DraftId'
+      responses:
+        '200': {description: Published}
+  /admin/config/versions/{id}/rollback:
+    post:
+      security: [{ adminBearer: [] }]
+      summary: Re-publish prior release as a new immutable version
+      parameters:
+        - $ref: '#/components/parameters/DraftId'
+      responses:
+        '200': {description: Rollback release published}
+components:
+  securitySchemes:
+    adminBearer:
+      type: http
+      scheme: bearer
+  parameters:
+    DraftId:
+      in: path
+      name: id
+      required: true
+      schema: {type: string}
+  schemas:
+    PublishedConfig:
+      type: object
+      required: [schemaVersion, configVersion, environment, payload]
+      properties:
+        schemaVersion: {type: integer, enum: [1]}
+        configVersion: {type: string}
+        environment: {type: string, enum: [development, staging, production]}
+        payload: {type: object, additionalProperties: true}

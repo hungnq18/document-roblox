@@ -1,3 +1,5 @@
+> **Current design precedence:** Phụ lục BL-V2 và các quyết định sau cùng thay thế nội dung lịch sử mâu thuẫn. Những mục chưa chốt giữ trạng thái TBD; không suy diễn là APPROVED.
+
 # BẢN THIẾT KẾ CORE GAMEPLAY & QUY TẮC NỀN TẢNG (GDD) \- DỰ ÁN BEAT THE HORDE (ROBLOX)
 
 ---
@@ -92,7 +94,7 @@
 
 ## VI. SÁCH KỸ NĂNG BỊ ĐỘNG (TOMES SYSTEM)
 
-47. **Giới hạn ô chứa Tome (Slot Limitations):** Người chơi mặc định có tối đa 2 ô Tome trong 1 Run. Ô thứ 3 (Slot 3\) và Ô thứ 4 (Slot 4\) bắt buộc phải mở khóa / mua bằng Robux.  
+47. **Giới hạn ô chứa Tome (Slot Limitations):** Người chơi mặc định có tối đa 2 ô Tome trong 1 Run. Ô thứ 3 (Slot 3\) và Ô thứ 4 (Slot 4\) được mở khóa vĩnh viễn bằng Coin hoặc mở sớm bằng Robux (quyết định BL-V2; chính sách Robux-only cũ đã SUPERSEDED).  
 48. **Giới hạn Cấp độ tối đa (Level Cap):** Cấp độ tối đa của mỗi Tome trong 1 Run là Cấp 30 (Level 30).  
 49. **Cơ chế Mở khóa & Khóa Tome (Locked / Monetized Tomes):** Các Tome có khả năng gây mất cân bằng hoặc quá bá đạo sẽ bị khóa khỏi kho Tome cơ bản. Người chơi cần dùng Tiền tệ trong game hoặc Robux tại Cửa hàng Sảnh (Lobby) để mở khóa vĩnh viễn trước khi chúng có thể xuất hiện trong Run. Danh sách các Tome bị khóa bao gồm:  
     1. **Sách Lời Nguyền (Cursed Tome):** Tăng mật độ quái elits xuất hiện nhiều hơn  
@@ -3169,7 +3171,7 @@ Các thông số riêng như Attack Range, Charge Time, AoE Radius và Projectil
 
 **Trạng thái:** Đã xác định danh sách 3 Primary Weapon và các giá trị Base Stats hiện tại. Công thức DPS cần được đối chiếu với Balance Sheet.
 
-![Sơ đồ gốc image1](assets/DOC-01_GDD_image1.png)
+![Sơ đồ gốc image1](../assets/images/DOC-01_GDD_image1.png)
 
 ### 7.6. Attack Range & Hit Detection {#7.6.-attack-range-&-hit-detection}
 
@@ -3382,7 +3384,7 @@ Các trường hợp cần được xử lý hoặc xác nhận:
 
 **Trạng thái:** Đã xác định thông số Cooldown cơ bản của các vũ khí được liệt kê và nguyên tắc Cooldown Tome. Công thức giảm Cooldown và các trường hợp đặc biệt cần được hoàn thiện trong Balance System.
 
-![Sơ đồ gốc image2](assets/DOC-01_GDD_image2.png)
+![Sơ đồ gốc image2](../assets/images/DOC-01_GDD_image2.png)
 
 ### 7.8. Primary Weapon Selection in Lobby {#7.8.-primary-weapon-selection-in-lobby}
 
